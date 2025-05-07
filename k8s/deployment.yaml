@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: name-ingestor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: name-ingestor
+  template:
+    metadata:
+      labels:
+        app: name-ingestor
+    spec:
+      containers:
+        - name: name-ingestor
+          image: myrepo/name-ingestor:latest
+          command: ["python3"]
+          args: ["main.py", "targetA", "name1,name2,admin"]
+          env:
+            - name: PG_HOST
+              value: "postgres.default.svc.cluster.local"
+            - name: PG_USER
+              value: "postgresUser"
+            - name: PG_PASS
+              value: "SuperSecretPassword123!"
+            - name: PG_DB
+              value: "postgresDB"
+          ports:
+            - containerPort: 8080
